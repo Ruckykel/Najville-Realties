@@ -144,6 +144,18 @@ const HomeServices = () => {
     }
   };
 
+  // Auto-rotate timer for mobile screens
+  useEffect(() => {
+    // Only auto-rotate on mobile screens where nav icons are hidden
+    if (window.innerWidth < 640) {
+      const rotationTimer = setInterval(() => {
+        handleNextClick();
+      }, 5000); // Change service every 5 seconds
+      
+      return () => clearInterval(rotationTimer);
+    }
+  }, [currentIndex]); // Re-initialize timer when currentIndex changes
+
   // Determine which services to display
   const displayServices = () => {
     const serviceSlice = [];
