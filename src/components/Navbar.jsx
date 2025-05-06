@@ -4,10 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Navbar = ({ 
   menuItems = [
     { href: "/", text: "Home" },
-    { href: "#", text: "About Us" },
-    { href: "#", text: "Services", hasSubmenu: true },
-    { href: "#", text: "Projects", hasSubmenu: true },
-    { href: "#", text: "Contact Us" },
+    { href: "/About", text: "About Us" },
+    { href: "/Services", text: "Services", hasSubmenu: true },
+    { href: "/Contact", text: "Contact Us" },
   ],
   socialLinks = [
     { href: "#", platform: "Facebook", icon: "fa-brands fa-facebook-f" },

@@ -115,19 +115,32 @@ const HomeServices = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % additionalServices.length);
   };
 
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  
+  // Minimum swipe distance in pixels
+  const minSwipeDistance = 50;
+
   const handleTouchStart = (e) => {
-    e.touches[0].startX = e.touches[0].clientX;
+    setTouchEnd(null); // Reset touchEnd
+    setTouchStart(e.targetTouches[0].clientX);
   };
 
   const handleTouchMove = (e) => {
-    if (!e.touches[0].startX) return;
-    const deltaX = e.touches[0].clientX - e.touches[0].startX;
-    if (deltaX > 50) {
-      handlePrevClick();
-      e.touches[0].startX = null;
-    } else if (deltaX < -50) {
-      handleNextClick();
-      e.touches[0].startX = null;
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe) {
+      handleNextClick(); // Swipe left to see next
+    } else if (isRightSwipe) {
+      handlePrevClick(); // Swipe right to see previous
     }
   };
 
@@ -172,8 +185,8 @@ const HomeServices = () => {
             Your browser does not support the video tag.
           </video>
           
-          {/* Gold Tint Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-[#332200]/60 z-10" />
+          {/* Gold Tint Overlay - REDUCED OPACITY HERE */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-[#332200]/30 z-10" />
           
           {/* Content */}
           <div className="absolute inset-0 z-20 flex flex-col justify-center items-center text-center p-8">
@@ -204,6 +217,7 @@ const HomeServices = () => {
             className="flex justify-center gap-6 transition-all duration-500"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             {displayServices().map((service, index) => (
               <div
@@ -238,8 +252,8 @@ const HomeServices = () => {
             ))}
           </div>
           
-          {/* Navigation Buttons */}
-          <div className="absolute top-1/3 transform -translate-y-1/2 w-full flex justify-between px-4 z-10">
+          {/* Navigation Buttons - Hidden on mobile */}
+          <div className="absolute top-1/3 transform -translate-y-1/2 w-full hidden sm:flex justify-between px-4 z-10">
             <button
               className="bg-white/80 backdrop-blur-sm rounded-full shadow-md p-2 hover:bg-white transition-colors"
               onClick={handlePrevClick}
