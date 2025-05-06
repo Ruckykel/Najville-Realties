@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = ({ 
   menuItems = [
@@ -20,8 +21,14 @@ const Navbar = ({
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    // Set loaded state after a small delay for startup animations
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setIsScrolled(currentScrollY > 0);
@@ -38,34 +45,141 @@ const Navbar = ({
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timer);
+    };
   }, [lastScrollY]);
+
+  // Animation variants
+  const navbarVariants = {
+    visible: { y: 0, opacity: 1 },
+    hidden: { y: -100, opacity: 0 }
+  };
+
+  const linkVariants = {
+    normal: { y: 0 },
+    hover: { y: -2, transition: { duration: 0.2 } }
+  };
+
+  const socialIconVariants = {
+    normal: { rotate: 0, scale: 1 },
+    hover: { rotate: 5, scale: 1.2, transition: { duration: 0.2 } }
+  };
+
+  const mobileMenuVariants = {
+    closed: { 
+      x: "-100%",
+      opacity: 0,
+      transition: { 
+        type: "spring", 
+        stiffness: 400, 
+        damping: 40 
+      } 
+    },
+    open: { 
+      x: 0,
+      opacity: 1,
+      transition: { 
+        type: "spring", 
+        stiffness: 300, 
+        damping: 30,
+        staggerChildren: 0.1,
+        when: "beforeChildren"
+      } 
+    }
+  };
+
+  const menuItemVariants = {
+    closed: { x: -20, opacity: 0 },
+    open: { x: 0, opacity: 1 }
+  };
+
+  // Startup animation variants
+  const containerStartupVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+        duration: 0.3
+      }
+    }
+  };
+
+  const itemStartupVariants = {
+    hidden: { y: -20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20
+      }
+    }
+  };
+
+  const logoStartupVariants = {
+    hidden: { y: -50, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+        delay: 0.2
+      }
+    }
+  };
 
   return (
     <>
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-lg' : 'bg-transparent'
-      } ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+      <motion.nav 
+        className={`fixed w-full z-50 ${
+          isScrolled ? 'bg-white shadow-lg' : 'bg-transparent'
+        }`}
+        variants={navbarVariants}
+        initial="visible"
+        animate={isVisible ? "visible" : "hidden"}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      >
         {/* Desktop Navbar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="hidden md:flex justify-between items-center h-20">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 bg-white">
+          <motion.div 
+            className="hidden md:flex justify-between items-center h-20 max-w-7xl mx-auto relative"
+            variants={containerStartupVariants}
+            initial="hidden"
+            animate={isLoaded ? "visible" : "hidden"}
+          >
             {/* Left Navigation Links */}
-            <div className="flex-1">
+            <div className="flex-1 flex justify-start">
               <div className="flex items-center space-x-8">
                 {menuItems.slice(0, 3).map((link, index) => (
-                  <a
+                  <motion.a
                     key={index}
                     href={link.href}
-                    className="text-black hover:text-gray-600 text-sm font-medium"
+                    className="text-black hover:text-gray-600 text-sm font-medium relative overflow-hidden group"
+                    variants={itemStartupVariants}
+                    whileHover="hover"
                   >
                     {link.text}
-                  </a>
+                    <motion.span 
+                      className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#B4974C] group-hover:w-full"
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.a>
                 ))}
               </div>
             </div>
 
             {/* Centered Logo */}
-            <div className="flex-shrink-0 absolute left-1/2 transform -translate-x-1/2">
+            <motion.div 
+              className="absolute left-1/2 transform -translate-x-1/2"
+              variants={logoStartupVariants}
+            >
               <a href={logoHref}>
                 <img 
                   src={logoSrc}
@@ -73,38 +187,57 @@ const Navbar = ({
                   className="h-8 w-auto"
                 />
               </a>
-            </div>
+            </motion.div>
             
             {/* Right Navigation and Social */}
             <div className="flex-1 flex justify-end items-center space-x-8">
               <div className="flex items-center space-x-8">
                 {menuItems.slice(3, 5).map((link, index) => (
-                  <a
+                  <motion.a
                     key={index}
                     href={link.href}
-                    className="text-black hover:text-gray-600 text-sm font-medium"
+                    className="text-black hover:text-gray-600 text-sm font-medium relative overflow-hidden group"
+                    variants={itemStartupVariants}
+                    whileHover="hover"
                   >
                     {link.text}
-                  </a>
+                    <motion.span 
+                      className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#B4974C] group-hover:w-full"
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.a>
                 ))}
               </div>
-              <div className="flex items-center space-x-4">
+              <motion.div 
+                className="flex items-center space-x-4"
+                variants={itemStartupVariants}
+              >
                 {socialLinks.map((social, index) => (
-                  <a
+                  <motion.a
                     key={index}
                     href={social.href}
                     className="text-black hover:text-gray-600"
+                    variants={socialIconVariants}
+                    whileHover="hover"
                   >
                     <i className={`${social.icon} text-sm`}></i>
-                  </a>
+                  </motion.a>
                 ))}
-              </div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Mobile Navbar */}
-          <div className="flex md:hidden justify-between items-center h-20">
-            <div className="flex-shrink-0">
+          <motion.div 
+            className="flex md:hidden justify-between items-center h-20"
+            variants={containerStartupVariants}
+            initial="hidden"
+            animate={isLoaded ? "visible" : "hidden"}
+          >
+            <motion.div 
+              className="flex-shrink-0" 
+              variants={logoStartupVariants}
+            >
               <a href={logoHref}>
                 <img 
                   src={logoSrc}
@@ -112,22 +245,29 @@ const Navbar = ({
                   className="h-8 w-auto"
                 />
               </a>
-            </div>
+            </motion.div>
             
-            <div className="flex items-center space-x-4">
+            <motion.div 
+              className="flex items-center space-x-4"
+              variants={itemStartupVariants}
+            >
               {socialLinks.map((social, index) => (
-                <a
+                <motion.a
                   key={index}
                   href={social.href}
                   className="text-black hover:text-gray-600"
+                  variants={socialIconVariants}
+                  whileHover="hover"
                 >
                   <i className={`${social.icon} text-sm`}></i>
-                </a>
+                </motion.a>
               ))}
-              <button
+              <motion.button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="bg-[#B4974C] p-3 rounded-sm"
                 aria-label="Menu"
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.05 }}
               >
                 <svg 
                   className="w-6 h-6 text-white" 
@@ -142,59 +282,80 @@ const Navbar = ({
                     d="M4 6h16M4 12h16M4 18h16"
                   />
                 </svg>
-              </button>
-            </div>
-          </div>
+              </motion.button>
+            </motion.div>
+          </motion.div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Mobile Menu Overlay */}
-      <div 
-        className={`fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
-          isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={() => setIsMenuOpen(false)}
-      >
-        <div 
-          className={`fixed inset-y-0 left-0 w-full max-w-sm bg-white transform transition-transform duration-300 ease-in-out ${
-            isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-          onClick={e => e.stopPropagation()}
-        >
-          <div className="flex justify-between items-center p-4 border-b border-gray-200">
-            <a href={logoHref}>
-              <img 
-                src={logoSrc}
-                alt="Najville Realties" 
-                className="h-8 w-auto"
-              />
-            </a>
-            <button
-              onClick={() => setIsMenuOpen(false)}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-[#B4974C] text-white"
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <motion.div 
+              className="fixed inset-y-0 left-0 w-full max-w-sm bg-white"
+              variants={mobileMenuVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              onClick={e => e.stopPropagation()}
             >
-              ×
-            </button>
-          </div>
-          
-          <div className="py-2">
-            {menuItems.map((item, index) => (
-              <div key={index} className="border-b border-gray-100">
-                <a
-                  href={item.href}
-                  className="flex items-center justify-between px-6 py-4 text-base text-gray-900 hover:text-[#B4974C]"
-                  onClick={() => !item.hasSubmenu && setIsMenuOpen(false)}
-                >
-                  {item.text}
-                  {item.hasSubmenu && (
-                    <span className="text-[#B4974C] text-xl">+</span>
-                  )}
+              <div className="flex justify-between items-center p-4 border-b border-gray-200">
+                <a href={logoHref}>
+                  <img 
+                    src={logoSrc}
+                    alt="Najville Realties" 
+                    className="h-8 w-auto"
+                  />
                 </a>
+                <motion.button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-[#B4974C] text-white"
+                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ scale: 1.1 }}
+                >
+                  ×
+                </motion.button>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
+              
+              <div className="py-2">
+                {menuItems.map((item, index) => (
+                  <motion.div 
+                    key={index} 
+                    className="border-b border-gray-100"
+                    variants={menuItemVariants}
+                  >
+                    <motion.a
+                      href={item.href}
+                      className="flex items-center justify-between px-6 py-4 text-base text-gray-900 hover:text-[#B4974C]"
+                      onClick={() => !item.hasSubmenu && setIsMenuOpen(false)}
+                      whileHover={{ x: 5, transition: { duration: 0.2 } }}
+                    >
+                      {item.text}
+                      {item.hasSubmenu && (
+                        <motion.span 
+                          className="text-[#B4974C] text-xl"
+                          initial={{ rotate: 0 }}
+                          whileHover={{ rotate: 90, transition: { duration: 0.2 } }}
+                        >
+                          +
+                        </motion.span>
+                      )}
+                    </motion.a>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
