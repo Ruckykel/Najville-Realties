@@ -1,76 +1,226 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Facebook, Twitter, Linkedin, Instagram, Youtube } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Footer = () => {
+  const footerRef = useRef(null);
+  
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.1,
+        delayChildren: 0.1
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { duration: 0.5 }
+    }
+  };
+  
+  const logoVariants = {
+    hidden: { scale: 0.8, opacity: 0 },
+    visible: { 
+      scale: 1, 
+      opacity: 1,
+      transition: { duration: 0.6, ease: "easeOut" }
+    }
+  };
+  
+  const socialIconVariants = {
+    hidden: { scale: 0, opacity: 0 },
+    visible: i => ({ 
+      scale: 1, 
+      opacity: 1,
+      transition: { 
+        delay: i * 0.1,
+        duration: 0.3,
+        type: "spring",
+        stiffness: 300
+      }
+    }),
+    hover: { 
+      scale: 1.2,
+      color: "#AF8A2D",
+      transition: { duration: 0.2 }
+    }
+  };
+
+  const linkHoverVariants = {
+    hover: { 
+      x: 5,
+      color: "#AF8A2D",
+      transition: { duration: 0.2 }
+    }
+  };
+
   return (
-    <footer className="max-w-7xl mx-auto px-4 pt-24 pb-12">
-      <div className="mb-12 flex md:justify-center">
-        <img 
+    <motion.footer 
+      ref={footerRef}
+      className=" max-w-7xl mx-auto px-4 pt-12 pb-12"
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.1 }}
+    >
+      <motion.div 
+        className="mb-12 flex md:justify-center"
+        variants={logoVariants}
+      >
+        <motion.img 
           src="/Najville.svg" 
-          alt="Knight Frank"
+          alt="Najville Realties"
           className="h-8"
+          whileHover={{ scale: 1.05 }}
         />
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-52 mb-12 ">
-        <div>
-          <h3 className="font-semibold text-lg mb-4">Residential</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-52 mb-12">
+        <motion.div variants={itemVariants}>
+          <motion.h3 
+            className="font-semibold text-lg mb-4"
+            variants={itemVariants}
+          >
+            Residential
+          </motion.h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:underline">Residential property</a></li>
-            <li><a href="#" className="hover:underline">Property management</a></li>
-            <li><a href="#" className="hover:underline">Estate agency</a></li>
-            <li><a href="#" className="hover:underline">Valuations</a></li>
+            {['Residential property', 'Property management', 'Estate agency', 'Valuations'].map((item, index) => (
+              <motion.li 
+                key={index}
+                variants={itemVariants}
+                custom={index}
+              >
+                <motion.a 
+                  href="#" 
+                  className="hover:underline inline-block"
+                  variants={linkHoverVariants}
+                  whileHover="hover"
+                >
+                  {item}
+                </motion.a>
+              </motion.li>
+            ))}
           </ul>
-        </div>
+        </motion.div>
 
-        <div>
-          <h3 className="font-semibold text-lg mb-4">Commercial</h3>
+        <motion.div variants={itemVariants}>
+          <motion.h3 
+            className="font-semibold text-lg mb-4"
+            variants={itemVariants}
+          >
+            Commercial
+          </motion.h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:underline">Commercial property</a></li>
-            <li><a href="#" className="hover:underline">Property management</a></li>
-            <li><a href="#" className="hover:underline">Estate agency</a></li>
-            <li><a href="#" className="hover:underline">Valuations</a></li>
+            {['Commercial property', 'Property management', 'Estate agency', 'Valuations'].map((item, index) => (
+              <motion.li 
+                key={index}
+                variants={itemVariants}
+                custom={index}
+              >
+                <motion.a 
+                  href="#" 
+                  className="hover:underline inline-block"
+                  variants={linkHoverVariants}
+                  whileHover="hover"
+                >
+                  {item}
+                </motion.a>
+              </motion.li>
+            ))}
           </ul>
-        </div>
+        </motion.div>
 
-        <div>
-          <h3 className="font-semibold text-lg mb-4">About Najville</h3>
+        <motion.div variants={itemVariants}>
+          <motion.h3 
+            className="font-semibold text-lg mb-4"
+            variants={itemVariants}
+          >
+            About Najville
+          </motion.h3>
           <ul className="space-y-2 mb-8 text-sm">
-            <li><a href="#" className="hover:underline">Our App</a></li>
-            <li><a href="#" className="hover:underline">Blog</a></li>
-            <li><a href="#" className="hover:underline">Contact us</a></li>
+            {['Our App', 'Blog', 'Contact us'].map((item, index) => (
+              <motion.li 
+                key={index}
+                variants={itemVariants}
+                custom={index}
+              >
+                <motion.a 
+                  href="#" 
+                  className="hover:underline inline-block"
+                  variants={linkHoverVariants}
+                  whileHover="hover"
+                >
+                  {item}
+                </motion.a>
+              </motion.li>
+            ))}
           </ul>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="flex flex-wrap gap-4 mb-8 md:justify-center">
-        <a href="#" className="text-gray-400 hover:text-gray-600">
-          <Facebook size={24} />
-        </a>
-        <a href="#" className="text-gray-400 hover:text-gray-600">
-          <Twitter size={24} />
-        </a>
-        <a href="#" className="text-gray-400 hover:text-gray-600">
-          <Linkedin size={24} />
-        </a>
-        <a href="#" className="text-gray-400 hover:text-gray-600">
-          <Instagram size={24} />
-        </a>
-        <a href="#" className="text-gray-400 hover:text-gray-600">
-          <Youtube size={24} />
-        </a>
-      </div>
+      <motion.div 
+        className="flex flex-wrap gap-4 mb-8 md:justify-center"
+        variants={itemVariants}
+      >
+        {[
+          { icon: <Facebook size={24} />, name: "Facebook" },
+          { icon: <Twitter size={24} />, name: "Twitter" },
+          { icon: <Linkedin size={24} />, name: "LinkedIn" },
+          { icon: <Instagram size={24} />, name: "Instagram" },
+          { icon: <Youtube size={24} />, name: "YouTube" }
+        ].map((social, index) => (
+          <motion.a 
+            key={index}
+            href="#" 
+            className="text-gray-400"
+            variants={socialIconVariants}
+            custom={index}
+            whileHover="hover"
+            aria-label={social.name}
+          >
+            {social.icon}
+          </motion.a>
+        ))}
+      </motion.div>
 
-      <div className="flex flex-wrap gap-4 text-sm mb-8 md:justify-center">
-        <a href="#" className="hover:underline">Terms and Conditions</a>
-        <a href="#" className="hover:underline">Group Privacy Statement</a>
-        <a href="#" className="hover:underline">Fair Processing Notice</a>
-      </div>
+      <motion.div 
+        className="flex flex-wrap gap-4 text-sm mb-8 md:justify-center"
+        variants={itemVariants}
+      >
+        {['Terms and Conditions', 'Group Privacy Statement', 'Fair Processing Notice'].map((item, index) => (
+          <motion.a 
+            key={index} 
+            href="#" 
+            className="hover:underline"
+            variants={linkHoverVariants}
+            whileHover="hover"
+          >
+            {item}
+          </motion.a>
+        ))}
+      </motion.div>
 
-      <div className="text-sm text-gray-600 flex justify-center">
+      <motion.div 
+        className="text-sm text-gray-600 flex justify-center"
+        variants={itemVariants}
+        initial={{ opacity: 0 }}
+        whileInView={{ 
+          opacity: 1,
+          transition: { delay: 0.5, duration: 0.7 }
+        }}
+        viewport={{ once: true }}
+      >
         Copyright © 2025 Najville Realties
-      </div>
-    </footer>
+      </motion.div>
+    </motion.footer>
   );
 };
 
