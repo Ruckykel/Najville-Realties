@@ -239,7 +239,7 @@ const TrainingCourses = () => {
   const courses = [
     {
       title: "AutoCAD Essentials",
-      image: "/Autocad.jpg",
+      image: "/Autocad.jpeg",
       level: "Beginner",
       duration: "3 Days",
       format: "In-person or Live Online",
@@ -305,7 +305,7 @@ const TrainingCourses = () => {
     },
     {
       title: "Revit Architecture Essentials",
-      image: "/Revit.jpg",
+      image: "/Revit.jpeg",
       level: "Beginner",
       duration: "3 Days",
       format: "In-person or Live Online",
