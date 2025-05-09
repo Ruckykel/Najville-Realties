@@ -85,17 +85,22 @@ const MainServiceSection = () => {
   
   // Get random video index based on page load/refresh
   const getVideoIndex = () => {
-    if (typeof window !== 'undefined') {
-      const index = sessionStorage.getItem('najville-video-index');
-      if (index === null) {
-        const newIndex = Math.floor(Math.random() * videos.length);
-        sessionStorage.setItem('najville-video-index', newIndex.toString());
-        return newIndex;
-      } else {
-        const nextIndex = (parseInt(index) + 1) % videos.length;
-        sessionStorage.setItem('najville-video-index', nextIndex.toString());
-        return nextIndex;
+    // Simplified version - avoid sessionStorage errors on initial load
+    try {
+      if (typeof window !== 'undefined') {
+        const index = sessionStorage.getItem('najville-video-index');
+        if (index === null) {
+          const newIndex = Math.floor(Math.random() * videos.length);
+          sessionStorage.setItem('najville-video-index', newIndex.toString());
+          return newIndex;
+        } else {
+          const nextIndex = (parseInt(index) + 1) % videos.length;
+          sessionStorage.setItem('najville-video-index', nextIndex.toString());
+          return nextIndex;
+        }
       }
+    } catch (err) {
+      console.error("Error with sessionStorage:", err);
     }
     return 0;
   };
@@ -109,18 +114,30 @@ const MainServiceSection = () => {
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 } // Lower threshold for mobile
     );
     
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
     
-    // Ensure video plays
+    // Ensure video plays with error handling
     if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.error("Video play failed:", error);
-      });
+      // Only try to play video after page is fully loaded
+      const playVideo = () => {
+        if (videoRef.current) {
+          videoRef.current.play().catch(error => {
+            console.error("Video play failed:", error);
+          });
+        }
+      };
+      
+      if (document.readyState === 'complete') {
+        playVideo();
+      } else {
+        window.addEventListener('load', playVideo);
+        return () => window.removeEventListener('load', playVideo);
+      }
     }
     
     return () => {
@@ -215,14 +232,14 @@ const MainServiceSection = () => {
   ];
 
   return (
-    <section id="main-service" ref={sectionRef} className="py-10">
+    <section id="main-service" ref={sectionRef} className="py-10 w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        {/* Section Header */}
+        {/* Section Header - Ensure this is visible on mobile */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={isVisible ? { opacity: 1 } : { opacity: 0 }}
+          animate={{ opacity: 1 }} // Always animate, not dependent on isVisible
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="text-center mb-8 md:mb-12 w-full"
         >
           <div className="inline-block bg-[#AF8A2D]/10 px-4 py-2 rounded-full">
             <h2 className="text-sm font-semibold tracking-wider uppercase text-[#AF8A2D]">
@@ -230,7 +247,7 @@ const MainServiceSection = () => {
             </h2>
           </div>
           
-          <h3 className="text-4xl font-bold text-gray-900 mt-4 mb-4">
+          <h3 className="text-2xl md:text-4xl font-bold text-gray-900 mt-4 mb-4">
             Comprehensive Estate Maintenance Solutions
           </h3>
           
@@ -239,17 +256,17 @@ const MainServiceSection = () => {
           </p>
         </motion.div>
         
-        {/* Top Section: Video and Overview */}
-        <div className="flex flex-col lg:flex-row gap-8 items-center mb-16">
-          {/* Video Panel */}
+        {/* Top Section: Video and Overview - Fixed for mobile */}
+        <div className="flex flex-col lg:flex-row gap-6 items-center mb-10 md:mb-16 w-full">
+          {/* Video Panel - Simplified for mobile */}
           <motion.div
             className="w-full lg:w-1/2"
-            initial={{ opacity: 0, x: -30 }}
-            animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
           >
             <div className="rounded-xl overflow-hidden shadow-md relative">
-              <div className="aspect-video w-full">
+              <div className="relative" style={{ paddingBottom: "56.25%" }}>
                 <video 
                   ref={videoRef}
                   autoPlay 
@@ -257,29 +274,29 @@ const MainServiceSection = () => {
                   muted 
                   playsInline
                   className="absolute inset-0 w-full h-full object-cover"
+                  poster="/video-poster.jpg" // Add a poster image as fallback
                 >
                   <source src={videos[getVideoIndex()]} type="video/mp4" />
+                  Your browser does not support the video tag.
                 </video>
-                {/* Fix for mobile video display issues */}
-                <div className="w-full h-0" style={{ paddingBottom: "56.25%" }}></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/10"></div>
-                <div className="absolute bottom-0 left-0 p-6 z-10">
-                  <h4 className="text-2xl font-bold text-white mb-1">Professional Excellence</h4>
-                  <p className="text-white/90">Expert team delivering world-class property care</p>
+                <div className="absolute bottom-0 left-0 p-4 md:p-6 z-10">
+                  <h4 className="text-xl md:text-2xl font-bold text-white mb-1">Professional Excellence</h4>
+                  <p className="text-sm md:text-base text-white/90">Expert team delivering world-class property care</p>
                 </div>
               </div>
             </div>
           </motion.div>
           
-          {/* Overview */}
+          {/* Overview - Fixed for mobile */}
           <motion.div
-            className="w-full lg:w-1/2"
-            initial={{ opacity: 0, x: 30 }}
-            animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            className="w-full lg:w-1/2 mt-6 lg:mt-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div>
-              <h4 className="text-2xl font-bold text-gray-800 mb-4">
+              <h4 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">
                 Comprehensive Property Care Solutions
               </h4>
               
@@ -294,8 +311,8 @@ const MainServiceSection = () => {
           </motion.div>
         </div>
         
-        {/* Services Grid - now with 3x2 grid for 6 services */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        {/* Services Grid - Responsive grid for all screen sizes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10 md:mb-16">
           {services.map((service, index) => (
             <ServiceCard
               key={index}
@@ -309,17 +326,17 @@ const MainServiceSection = () => {
         
         {/* Why Choose Us Section */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="bg-gray-50 rounded-xl p-8 mb-12"
+          viewport={{ once: true, margin: "-100px" }}
+          className="bg-gray-50 rounded-xl p-6 md:p-8 mb-10 md:mb-12"
         >
-          <h5 className="text-2xl font-bold text-gray-900 text-center mb-8">
+          <h5 className="text-xl md:text-2xl font-bold text-gray-900 text-center mb-6 md:mb-8">
             Why Choose Our Estate Maintenance Services
           </h5>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {benefits.map((benefit, index) => (
               <BenefitItem
                 key={index}
@@ -332,13 +349,13 @@ const MainServiceSection = () => {
         
         {/* CTA Section */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
+          viewport={{ once: true, margin: "-50px" }}
+          className="text-center mt-8 md:mt-12"
         >
-          <h4 className="text-2xl font-bold text-gray-800 mb-6">Ready to transform your property?</h4>
+          <h4 className="text-xl md:text-2xl font-bold text-gray-800 mb-6">Ready to transform your property?</h4>
           <motion.button 
             className="bg-[#AF8A2D] hover:bg-[#8A6F25] text-white font-bold py-3 px-8 rounded-full"
             whileHover={{ scale: 1.05 }}
