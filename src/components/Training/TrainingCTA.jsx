@@ -26,13 +26,13 @@ const TrainingCTA = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="inline-block bg-[#AF8A2D]/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-              <h2 className="text-sm font-semibold tracking-wider uppercase text-[#AF8A2D]">
+              <h2 className="text-sm font-semibold tracking-wider uppercase text-[#ddb040]">
                 Take The Next Step
               </h2>
             </div>
 
             <h3 className="text-4xl font-bold text-white mb-6">
-              Invest in Your <span className="text-[#AF8A2D]">Professional Growth</span>
+              Invest in Your <span className="text-[#d2a73b]">Professional Growth</span>
             </h3>
             
             <p className="text-gray-300 text-lg mb-10 max-w-2xl mx-auto">
@@ -91,16 +91,7 @@ const TrainingCTA = () => {
             
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
               <motion.a
-                href="#enroll"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                className="bg-[#AF8A2D] hover:bg-[#8A6F25] text-white font-bold py-4 px-10 rounded-full shadow-lg text-lg w-full sm:w-auto"
-              >
-                Enroll Now
-              </motion.a>
-              
-              <motion.a
-                href="tel:+2349030805750"
+                href="/Contact"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 className="bg-transparent border-2 border-white hover:bg-white/10 text-white font-bold py-4 px-10 rounded-full shadow-lg text-lg w-full sm:w-auto"
