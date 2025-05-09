@@ -72,14 +72,6 @@ const CourseCard = ({ course, index, openModal }) => {
             >
               Learn More
             </motion.button>
-            
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg"
-            >
-              Enroll
-            </motion.button>
           </div>
         </div>
       </div>
