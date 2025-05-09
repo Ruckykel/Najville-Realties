@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = ({ 
   menuItems = [
     { href: "/", text: "Home" },
-    { href: "/About", text: "About Us" },
+    { href: "/Training", text: "Training" },
     { href: "/Services", text: "Services", hasSubmenu: true },
     { href: "/Contact", text: "Contact Us" },
   ],
@@ -20,13 +21,12 @@ const Navbar = ({
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true); // Set to true by default
+  const location = useLocation();
 
   useEffect(() => {
-    // Set loaded state after a small delay for startup animations
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
+    // No delay for setting isLoaded
+    setIsLoaded(true);
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -46,9 +46,17 @@ const Navbar = ({
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      clearTimeout(timer);
     };
   }, [lastScrollY]);
+
+  // Reset scroll position when route changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    // Always ensure navbar is visible on route change
+    setIsVisible(true);
+    // Close mobile menu on route change
+    setIsMenuOpen(false);
+  }, [location]);
 
   // Animation variants
   const navbarVariants = {
@@ -94,51 +102,73 @@ const Navbar = ({
     open: { x: 0, opacity: 1 }
   };
 
-  // Startup animation variants
+  // Startup animation variants - faster transitions
   const containerStartupVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
         when: "beforeChildren",
-        staggerChildren: 0.1,
-        duration: 0.3
+        staggerChildren: 0.05, // Reduced stagger time
+        duration: 0.2 // Faster overall animation
       }
     }
   };
 
   const itemStartupVariants = {
-    hidden: { y: -20, opacity: 0 },
+    hidden: { y: -10, opacity: 0 }, // Less movement
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         type: "spring",
-        stiffness: 300,
-        damping: 20
+        stiffness: 500, // Increased stiffness for faster motion
+        damping: 25,
+        duration: 0.2 // Faster animation
       }
     }
   };
 
   const logoStartupVariants = {
-    hidden: { y: -50, opacity: 0 },
+    hidden: { y: -20, opacity: 0 }, // Less movement
     visible: { 
       y: 0, 
       opacity: 1,
       transition: {
         type: "spring",
-        stiffness: 300,
-        damping: 20,
-        delay: 0.2
+        stiffness: 500, // Increased stiffness for faster motion
+        damping: 25,
+        delay: 0.05, // Much shorter delay
+        duration: 0.2 // Faster animation
       }
     }
+  };
+
+  // Function to render menu items with React Router's Link
+  const renderMenuItems = (items, startIndex, endIndex) => {
+    return items.slice(startIndex, endIndex).map((link, index) => (
+      <motion.div
+        key={index}
+        className="text-black hover:text-gray-600 text-sm font-medium relative overflow-hidden group"
+        variants={itemStartupVariants}
+        whileHover="hover"
+      >
+        <Link to={link.href} className="block">
+          {link.text}
+          <motion.span 
+            className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#B4974C] group-hover:w-full"
+            transition={{ duration: 0.3 }}
+          />
+        </Link>
+      </motion.div>
+    ));
   };
 
   return (
     <>
       <motion.nav 
         className={`fixed w-full z-50 ${
-          isScrolled ? 'bg-white shadow-lg' : 'bg-transparent'
+          isScrolled ? 'bg-white shadow-lg' : 'bg-white'
         }`}
         variants={navbarVariants}
         initial="visible"
@@ -150,27 +180,13 @@ const Navbar = ({
           <motion.div 
             className="hidden md:flex justify-between items-center h-20 max-w-7xl mx-auto relative"
             variants={containerStartupVariants}
-            initial="hidden"
-            animate={isLoaded ? "visible" : "hidden"}
+            initial="visible" // Changed from "hidden" to "visible" to prevent delay
+            animate="visible"
           >
             {/* Left Navigation Links */}
             <div className="flex-1 flex justify-start">
               <div className="flex items-center space-x-8">
-                {menuItems.slice(0, 3).map((link, index) => (
-                  <motion.a
-                    key={index}
-                    href={link.href}
-                    className="text-black hover:text-gray-600 text-sm font-medium relative overflow-hidden group"
-                    variants={itemStartupVariants}
-                    whileHover="hover"
-                  >
-                    {link.text}
-                    <motion.span 
-                      className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#B4974C] group-hover:w-full"
-                      transition={{ duration: 0.3 }}
-                    />
-                  </motion.a>
-                ))}
+                {renderMenuItems(menuItems, 0, 3)}
               </div>
             </div>
 
@@ -179,33 +195,19 @@ const Navbar = ({
               className="absolute left-1/2 transform -translate-x-1/2"
               variants={logoStartupVariants}
             >
-              <a href={logoHref}>
+              <Link to={logoHref}>
                 <img 
                   src={logoSrc}
                   alt="Najville Realties" 
                   className="h-8 w-auto"
                 />
-              </a>
+              </Link>
             </motion.div>
             
             {/* Right Navigation and Social */}
             <div className="flex-1 flex justify-end items-center space-x-8">
               <div className="flex items-center space-x-8">
-                {menuItems.slice(3, 5).map((link, index) => (
-                  <motion.a
-                    key={index}
-                    href={link.href}
-                    className="text-black hover:text-gray-600 text-sm font-medium relative overflow-hidden group"
-                    variants={itemStartupVariants}
-                    whileHover="hover"
-                  >
-                    {link.text}
-                    <motion.span 
-                      className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#B4974C] group-hover:w-full"
-                      transition={{ duration: 0.3 }}
-                    />
-                  </motion.a>
-                ))}
+                {renderMenuItems(menuItems, 3, 5)}
               </div>
               <motion.div 
                 className="flex items-center space-x-4"
@@ -230,20 +232,20 @@ const Navbar = ({
           <motion.div 
             className="flex md:hidden justify-between items-center h-20"
             variants={containerStartupVariants}
-            initial="hidden"
-            animate={isLoaded ? "visible" : "hidden"}
+            initial="visible" // Changed from "hidden" to "visible" to prevent delay
+            animate="visible"
           >
             <motion.div 
               className="flex-shrink-0" 
               variants={logoStartupVariants}
             >
-              <a href={logoHref}>
+              <Link to={logoHref}>
                 <img 
                   src={logoSrc}
                   alt="Najville Realties" 
                   className="h-8 w-auto"
                 />
-              </a>
+              </Link>
             </motion.div>
             
             <motion.div 
@@ -307,13 +309,13 @@ const Navbar = ({
               onClick={e => e.stopPropagation()}
             >
               <div className="flex justify-between items-center p-4 border-b border-gray-200">
-                <a href={logoHref}>
+                <Link to={logoHref}>
                   <img 
                     src={logoSrc}
                     alt="Najville Realties" 
                     className="h-8 w-auto"
                   />
-                </a>
+                </Link>
                 <motion.button
                   onClick={() => setIsMenuOpen(false)}
                   className="w-8 h-8 flex items-center justify-center rounded-full bg-[#B4974C] text-white"
@@ -331,23 +333,24 @@ const Navbar = ({
                     className="border-b border-gray-100"
                     variants={menuItemVariants}
                   >
-                    <motion.a
-                      href={item.href}
-                      className="flex items-center justify-between px-6 py-4 text-base text-gray-900 hover:text-[#B4974C]"
-                      onClick={() => !item.hasSubmenu && setIsMenuOpen(false)}
-                      whileHover={{ x: 5, transition: { duration: 0.2 } }}
-                    >
-                      {item.text}
-                      {item.hasSubmenu && (
-                        <motion.span 
-                          className="text-[#B4974C] text-xl"
-                          initial={{ rotate: 0 }}
-                          whileHover={{ rotate: 90, transition: { duration: 0.2 } }}
-                        >
-                          +
-                        </motion.span>
-                      )}
-                    </motion.a>
+                    <Link to={item.href}>
+                      <motion.div
+                        className="flex items-center justify-between px-6 py-4 text-base text-gray-900 hover:text-[#B4974C]"
+                        onClick={() => !item.hasSubmenu && setIsMenuOpen(false)}
+                        whileHover={{ x: 5, transition: { duration: 0.2 } }}
+                      >
+                        {item.text}
+                        {item.hasSubmenu && (
+                          <motion.span 
+                            className="text-[#B4974C] text-xl"
+                            initial={{ rotate: 0 }}
+                            whileHover={{ rotate: 90, transition: { duration: 0.2 } }}
+                          >
+                            +
+                          </motion.span>
+                        )}
+                      </motion.div>
+                    </Link>
                   </motion.div>
                 ))}
               </div>

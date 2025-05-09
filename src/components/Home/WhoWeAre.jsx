@@ -96,7 +96,7 @@ const WhoWeAre = () => {
                 <h4 className="text-lg sm:text-xl font-bold text-gray-800">Our Mission</h4>
               </div>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Our mission is to deliver innovative and sustainable real estate solutions through exceptional architectural design, precise construction, creative interior decoration, and quality equipment supplies.
+                To bridge Nigeria's housing gap through innovative, high-quality, and sustainable real estate solutions that are affordable and accessible to all socioeconomic levels while maintaining the highest standards of integrity and environmental responsibility.
               </p>
             </motion.div>
 
@@ -116,26 +116,9 @@ const WhoWeAre = () => {
                 <h4 className="text-lg sm:text-xl font-bold text-gray-800">Our Vision</h4>
               </div>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Our vision is to deliver innovative and sustainable real estate solutions through exceptional architectural design, precise construction, creative interior decoration, and quality equipment supplies.
+                To become Nigeria's premier real estate firm, recognized for transforming urban landscapes through architectural excellence, creating communities that enhance quality of life, and setting new standards for sustainable development across West Africa.
               </p>
             </motion.div>
-          </motion.div>
-
-          {/* Learn More Button */}
-          <motion.div 
-            className="flex justify-center md:justify-start"
-            variants={fadeInUp}
-          >
-            <a href="#about-us">
-              <motion.button
-                className="px-8 py-3 bg-[#AF8A2D] text-white rounded-lg font-semibold shadow-md hover:shadow-lg group relative overflow-hidden"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="absolute inset-0 w-full h-full bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out opacity-25"></span>
-                <span className="relative z-10">Learn More</span>
-              </motion.button>
-            </a>
           </motion.div>
         </motion.div>
 

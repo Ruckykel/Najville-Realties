@@ -103,12 +103,6 @@ const HomeHero = () => {
               className="mt-12 flex flex-col sm:flex-row justify-center gap-4"
             >
               <a 
-                href="#get-started" 
-                className="bg-white hover:bg-gray-100 text-[#1e1e1e] font-bold py-3 px-8 rounded-lg transition-all duration-300 inline-block shadow-md"
-              >
-                Get Started Today
-              </a>
-              <a 
                 href="#services" 
                 className="bg-transparent hover:bg-white/10 text-white border-2 border-white font-bold py-3 px-8 rounded-lg transition-all duration-300 inline-block"
               >

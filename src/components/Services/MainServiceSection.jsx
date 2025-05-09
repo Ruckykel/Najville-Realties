@@ -356,13 +356,15 @@ const MainServiceSection = () => {
           className="text-center mt-8 md:mt-12"
         >
           <h4 className="text-xl md:text-2xl font-bold text-gray-800 mb-6">Ready to transform your property?</h4>
-          <motion.button 
-            className="bg-[#AF8A2D] hover:bg-[#8A6F25] text-white font-bold py-3 px-8 rounded-full"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Contact Us Today
-          </motion.button>
+          <a href="/Contact">
+           <motion.button 
+             className="bg-[#AF8A2D] hover:bg-[#8A6F25] text-white font-bold py-3 px-8 rounded-full"
+             whileHover={{ scale: 1.05 }}
+             whileTap={{ scale: 0.95 }}
+           >
+             Contact Us Today
+           </motion.button>
+          </a>
         </motion.div>
       </div>
     </section>

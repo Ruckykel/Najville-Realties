@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const HomeServices = () => {
   // Featured main service with multiple videos
@@ -69,6 +70,11 @@ const HomeServices = () => {
       }
     }
     return 0;
+  };
+  
+  // Handle learn more click - store destination in sessionStorage
+  const handleLearnMoreClick = () => {
+    sessionStorage.setItem('scrollToMainService', 'true');
   };
   
   // Animation on component mount
@@ -209,9 +215,13 @@ const HomeServices = () => {
             <p className="text-white text-lg md:text-xl max-w-2xl mx-auto">
               {mainService.description}
             </p>
-            <button className="mt-8 bg-[#AF8A2D] hover:bg-[#8A6F25] text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105">
-              Learn More
-            </button>
+            
+            {/* Learn More button with Link */}
+            <Link to="/Services" onClick={handleLearnMoreClick}>
+              <button className="mt-8 bg-[#AF8A2D] hover:bg-[#8A6F25] text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105">
+                Learn More
+              </button>
+            </Link>
           </div>
         </div>
 
@@ -255,9 +265,15 @@ const HomeServices = () => {
                       {service.title}
                     </h3>
                     <p className="text-white/90 text-sm flex-grow line-clamp-3">{service.description}</p>
-                    <button className="mt-4 self-start text-white border border-white/50 hover:bg-white/20 hover:border-white px-4 py-2 rounded text-sm transition-all duration-300 hover:translate-x-1 group">
+                    
+                    {/* Discover More Link */}
+                    <Link 
+                      to="/Services" 
+                      onClick={() => sessionStorage.setItem('scrollToAdditionalServices', service.title)}
+                      className="mt-4 self-start text-white border border-white/50 hover:bg-white/20 hover:border-white px-4 py-2 rounded text-sm transition-all duration-300 hover:translate-x-1 group"
+                    >
                       <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">Discover More</span>
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>

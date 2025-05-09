@@ -1,6 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, Mail, MapPin, ChevronDown, ChevronUp, Facebook, Instagram, Twitter, Linkedin } from 'lucide-react';
 
+// WhatsApp SVG Icon component
+const WhatsAppIcon = () => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className="h-5 w-5"
+  >
+    <path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.273-.101-.473-.15-.673.15-.2.301-.767.966-.94 1.164-.173.199-.347.223-.647.075-.3-.15-1.269-.468-2.419-1.491-.896-.795-1.497-1.77-1.676-2.07-.174-.3-.019-.462.13-.612.136-.13.301-.33.451-.492.146-.163.197-.3.297-.498.1-.204.05-.373-.025-.52-.075-.142-.673-1.622-.922-2.22-.24-.582-.497-.498-.672-.505-.173-.008-.371-.01-.571-.01-.2 0-.522.074-.796.372-.273.297-1.045 1.02-1.045 2.488 0 1.469.996 2.914 1.134 3.117.14.203 1.88 3.02 4.645 4.191.65.281 1.155.422 1.55.537.651.209 1.244.174 1.712.106.539-.08 1.641-.687 1.869-1.354.229-.666.229-1.236.16-1.357-.069-.123-.249-.186-.548-.328z"/>
+    <path d="M19.293 4.707C17.389 2.803 14.789 1.75 12.018 1.75 6.266 1.75 1.59 6.425 1.59 12.18c0 1.891.492 3.73 1.441 5.375L1.5 22.5l5.112-1.304c1.578.851 3.35 1.304 5.146 1.304h.004c5.75 0 10.425-4.675 10.425-10.43 0-2.786-1.053-5.386-2.894-7.363zm-7.275 16.023h-.004c-1.564 0-3.097-.414-4.433-1.194l-.335-.192-3.225.825.855-3.052-.215-.354c-.853-1.39-1.305-2.987-1.305-4.629 0-4.781 3.892-8.673 8.673-8.673 2.317 0 4.495.904 6.121 2.543 1.627 1.639 2.526 3.813 2.522 6.135-.003 4.784-3.894 8.675-8.676 8.675z" fill="currentColor" stroke="none"/>
+  </svg>
+);
+
 // Animated fade-in component
 const FadeIn = ({ children, delay = 0, direction = null }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -62,8 +79,8 @@ const FAQItem = ({ question, answer, index }) => {
   );
 };
 
-// Contact info item with animation
-const ContactItem = ({ icon, title, details, delay }) => {
+// Contact info item with animation and clickable links
+const ContactItem = ({ icon, title, details, links, delay }) => {
   return (
     <FadeIn delay={delay} direction="left">
       <div className="flex items-start group">
@@ -72,11 +89,17 @@ const ContactItem = ({ icon, title, details, delay }) => {
         </div>
         <div>
           <p className="font-semibold">{title}</p>
-          {Array.isArray(details) ? (
-            details.map((detail, idx) => <p key={idx}>{detail}</p>)
-          ) : (
-            <p>{details}</p>
-          )}
+          {details.map((detail, idx) => (
+            <a 
+              key={idx} 
+              href={links[idx]} 
+              className="block hover:underline transition-all duration-300 hover:translate-x-1"
+              target={links[idx].startsWith('http') ? "_blank" : ""}
+              rel={links[idx].startsWith('http') ? "noopener noreferrer" : ""}
+            >
+              {detail}
+            </a>
+          ))}
         </div>
       </div>
     </FadeIn>
@@ -102,19 +125,35 @@ const SocialIcon = ({ icon, url, delay }) => {
 };
 
 const ContactInfoSection = () => {
-  // FAQ data
+  // Updated FAQ data covering all services
   const faqs = [
     {
       question: "What areas do you service?",
-      answer: "We provide our estate maintenance and cleaning services throughout the metropolitan area and surrounding suburbs. For specific locations, please contact our customer service team."
+      answer: "We provide our real estate services throughout Nigeria, with primary focus on Lagos, Abuja, and Port Harcourt. For services in other locations, please contact our customer service team to confirm availability."
     },
     {
-      question: "How much do your services cost?",
+      question: "How much do your cleaning and maintenance services cost?",
       answer: "Our service costs vary depending on the specific requirements of your property. We offer customized quotes based on property size, service frequency, and specific maintenance needs. Contact us for a free consultation and quote."
     },
     {
-      question: "Do you offer recurring maintenance plans?",
-      answer: "Yes, we offer weekly, bi-weekly, and monthly maintenance plans tailored to your property's specific needs. Our recurring plans come with preferential rates and guaranteed priority scheduling."
+      question: "What is included in your estate maintenance package?",
+      answer: "Our comprehensive estate maintenance package includes regular cleaning, landscape maintenance, minor repairs, security monitoring, waste management, plumbing and electrical maintenance, and seasonal property inspections. We can customize packages based on your specific needs."
+    },
+    {
+      question: "Do you offer architectural design for both residential and commercial properties?",
+      answer: "Yes, our architectural design services cover both residential and commercial properties. Our team of experienced architects creates innovative, functional, and aesthetically pleasing designs tailored to your specific requirements and budget constraints."
+    },
+    {
+      question: "What is your approach to construction quality control?",
+      answer: "We implement a rigorous quality control process throughout all construction projects. This includes regular site inspections, adherence to building codes and standards, using high-quality materials, working with skilled craftsmen, and conducting thorough testing and commissioning before project handover."
+    },
+    {
+      question: "How do your interior design services work?",
+      answer: "Our interior design process begins with an initial consultation to understand your vision, style preferences, and budget. We then create concept designs, select materials, furniture, and accessories, and oversee the implementation to ensure the final result matches your expectations. We handle both residential and commercial interior design projects."
+    },
+    {
+      question: "What types of equipment do you procure for properties?",
+      answer: "Our equipment procurement services cover a wide range of property needs including HVAC systems, security systems, smart home technologies, kitchen appliances, lighting systems, generators, water treatment systems, and other specialized equipment based on your property requirements."
     },
     {
       question: "Are your cleaning products eco-friendly?",
@@ -124,48 +163,61 @@ const ContactInfoSection = () => {
       question: "How quickly can you respond to emergency situations?",
       answer: "Our emergency response team is available 24/7 and typically arrives within 2-4 hours of your call, depending on your location and the nature of the emergency."
     },
+    {
+      question: "Can you handle both small-scale and large-scale construction projects?",
+      answer: "Yes, our construction services cater to projects of all sizes, from small renovations to large-scale commercial developments. Our team scales resources appropriately to ensure quality and timely delivery regardless of project size."
+    }
   ];
 
-// Update social media links with website names
-const socialLinks = [
-  { 
-    icon: <Facebook className="h-5 w-5" />, 
-    url: "https://facebook.com/najville",
-    name: "Facebook"
-  },
-  { 
-    icon: <Instagram className="h-5 w-5" />, 
-    url: "https://instagram.com/najville",
-    name: "Instagram"
-  },
-  { 
-    icon: <Twitter className="h-5 w-5" />, 
-    url: "https://twitter.com/najville",
-    name: "Twitter"
-  },
-  { 
-    icon: <Linkedin className="h-5 w-5" />, 
-    url: "https://linkedin.com/company/najville",
-    name: "LinkedIn"
-  },
-];
+  // Update social media links
+  const socialLinks = [
+    { 
+      icon: <Facebook className="h-5 w-5" />, 
+      url: "https://facebook.com/najville",
+      name: "Facebook"
+    },
+    { 
+      icon: <Instagram className="h-5 w-5" />, 
+      url: "https://instagram.com/najville",
+      name: "Instagram"
+    },
+    { 
+      icon: <Twitter className="h-5 w-5" />, 
+      url: "https://twitter.com/najville",
+      name: "Twitter"
+    },
+    { 
+      icon: <Linkedin className="h-5 w-5" />, 
+      url: "https://linkedin.com/company/najville",
+      name: "LinkedIn"
+    },
+  ];
 
-  // Contact info data
+  // Updated contact info data with clickable links and correct email
   const contactInfo = [
     { 
       icon: <Phone className="h-5 w-5" />,
       title: "Call Us",
-      details: ["+1 (800) 555-1234", "+1 (888) 555-5678"]
+      details: ["+234 903 080 5750"],
+      links: ["tel:+2349030805750"]
+    },
+    {
+      icon: <WhatsAppIcon />,
+      title: "WhatsApp",
+      details: ["+234 808 964 8242"],
+      links: ["https://wa.me/2348089648242"]
     },
     {
       icon: <Mail className="h-5 w-5" />,
       title: "Email Us",
-      details: ["info@najville.com"]
+      details: ["earnest.nnajiarc@gmail.com"],
+      links: ["mailto:earnest.nnajiarc@gmail.com"]
     },
     {
       icon: <MapPin className="h-5 w-5" />,
       title: "Visit Us",
-      details: ["123 Main Street", "New York, NY 10001"]
+      details: ["123 Main Street, Lagos, Nigeria"],
+      links: ["https://maps.google.com/?q=123+Main+Street+Lagos+Nigeria"]
     }
   ];
 
@@ -209,6 +261,7 @@ const socialLinks = [
                       icon={item.icon}
                       title={item.title}
                       details={item.details}
+                      links={item.links}
                       delay={300 + (index * 100)}
                     />
                   ))}
@@ -267,7 +320,7 @@ const socialLinks = [
           <div className="absolute inset-0 bg-gradient-to-br from-[#AF8A2D]/5 to-white opacity-90 z-10 pointer-events-none"></div>
           <iframe
             title="Our Location"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.15830869428!2d-74.11976397304903!3d40.69766374873451!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sca!4v1683150233720!5m2!1sen!2sca"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d253682.45932780923!2d3.1193368273285426!3d6.548055966145058!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2ae68280c1%3A0xdc9e87a367c3d9cb!2sLagos%2C%20Nigeria!5e0!3m2!1sen!2sus!4v1712669558867!5m2!1sen!2sus"
             className="w-full h-full border-0"
             allowFullScreen=""
             loading="lazy"
