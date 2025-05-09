@@ -206,14 +206,6 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
                 </div>
                 <p className="text-sm text-gray-500 mt-4">* Prices may vary based on project scope, complexity, and specific requirements. Contact us for a personalized quote.</p>
               </div>
-              
-              <div className="text-center">
-                <button 
-                  className="bg-[#AF8A2D] hover:bg-[#8A6F25] text-white font-bold py-3 px-10 rounded-full shadow-md transition-all"
-                >
-                  Request a Quote
-                </button>
-              </div>
             </div>
           </div>
         </motion.div>
