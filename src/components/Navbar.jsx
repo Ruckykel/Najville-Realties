@@ -7,6 +7,7 @@ const Navbar = ({
     { href: "/", text: "Home" },
     { href: "/Training", text: "Training" },
     { href: "/Services", text: "Services", hasSubmenu: true },
+    { href: "/Portfolio", text: "Portfolio" },
     { href: "/Contact", text: "Contact Us" },
   ],
   socialLinks = [

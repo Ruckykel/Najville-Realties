@@ -15,7 +15,7 @@ const HeroSection = () => {
 
   return (
     <motion.section 
-      className="relative h-[80vh] flex items-center justify-center overflow-hidden"
+      className="relative min-h-[80vh] pt-32 pb-16 flex items-center justify-center overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1.2 }}

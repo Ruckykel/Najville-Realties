@@ -1,29 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const TrainingHero = () => {
+const PortfolioHero = () => {
   return (
-    <section className="relative bg-gray-900 text-white overflow-hidden min-h-screen pt-32 pb-28 flex items-center">
-      {/* Background Video with Overlay */}
+    <section className="relative bg-gray-900 text-white overflow-hidden min-h-[80vh] pt-32 pb-28 flex items-center">
+      {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
-        <video 
+        <img
+          src="/New-Media/Pics/3d1.webp"
+          alt="Najville Realties architectural render"
           className="w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
-          <source src="/TrainingVid.mp4" type="video/mp4" />
-          {/* Fallback image if video doesn't load */}
-          <img 
-            src="/images/training-hero.jpg" 
-            alt="Architectural software training" 
-            className="w-full h-full object-cover"
-          />
-        </video>
+        />
         <div className="absolute inset-0 bg-black/70"></div>
       </div>
-      
+
       {/* Hero Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl">
         <motion.div
@@ -34,32 +24,40 @@ const TrainingHero = () => {
         >
           <div className="inline-block bg-[#AF8A2D]/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
             <h2 className="text-sm font-semibold tracking-wider uppercase text-[#f6ca5a]">
-              Professional Architectural Software Training
+              Our Portfolio
             </h2>
           </div>
-          
+
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-            Master the Tools That <br />
-            <span className="text-[#deb03e]">Shape Your Designs</span>
+            From Concept <br />
+            <span className="text-[#deb03e]">To Completion</span>
           </h1>
-          
+
           <p className="text-xl text-gray-300 mb-8 max-w-2xl">
-            Enhance your skillset with our industry-focused training courses in AutoCAD and Revit. Learn from professionals who understand the real-world applications of architectural software.
+            Explore our work across every stage of a project — detailed architectural plans, photorealistic 3D visualizations, and quality construction on site.
           </p>
-          
+
           <div className="flex flex-wrap">
+            <motion.a
+              href="#portfolio-gallery"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-[#B4974C] hover:bg-[#a3873f] text-white font-bold py-3 px-8 rounded-full shadow-md mr-4 mb-4"
+            >
+              View Our Work
+            </motion.a>
             <motion.a
               href="/Contact"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              className="bg-transparent hover:bg-white/10 text-white border-2 border-white font-bold py-3 px-8 rounded-full shadow-md"
+              className="bg-transparent hover:bg-white/10 text-white border-2 border-white font-bold py-3 px-8 rounded-full shadow-md mb-4"
             >
-              Contact Us
+              Start a Project
             </motion.a>
           </div>
         </motion.div>
       </div>
-      
+
       {/* Wave Divider */}
       <div className="absolute bottom-0 left-0 right-0">
         <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,4 +68,4 @@ const TrainingHero = () => {
   );
 };
 
-export default TrainingHero;
+export default PortfolioHero;

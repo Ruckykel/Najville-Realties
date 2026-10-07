@@ -35,7 +35,7 @@ const HomeHero = () => {
   };
 
   return (
-    <div className="relative h-[100vh] sm:h-[100vh] overflow-hidden">
+    <div className="relative min-h-screen pt-20 overflow-hidden flex">
       {/* Video Background */}
       <div className="absolute inset-0">
         <video
@@ -56,7 +56,7 @@ const HomeHero = () => {
       </div>
       
       {/* Content - Centered Both Horizontally and Vertically */}
-      <div className="relative h-full flex items-center justify-center mt-8">
+      <div className="relative flex-1 flex items-center justify-center py-12">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="text-center"

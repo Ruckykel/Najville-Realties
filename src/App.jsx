@@ -3,6 +3,7 @@ import Home from './components/Home/Home';
 import Services from './components/Services/Services';
 import Contact from './components/Contact/Contact';
 import Training from './components/Training/Training';
+import Portfolio from './components/Portfolio/Portfolio';
 import PageTracker from './PageTracker'; // Add this import
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Services" element={<Services />} />
         <Route path="/Training" element={<Training />} />
+        <Route path="/Portfolio" element={<Portfolio />} />
         <Route path="/Contact" element={<Contact />} />
       </Routes>
     </Router>
